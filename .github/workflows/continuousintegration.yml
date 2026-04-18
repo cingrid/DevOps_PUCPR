@@ -19,12 +19,13 @@ jobs:
           linter: pylint
 
   discord:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-
-        - name: Run Discord Webhook
-          uses: johnnyhuy/actions-discord-git-webhook@main
-          with:
-            webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Discord Webhook
+        uses: johnnyhuy/actions-discord-git-webhook@v1.0.4
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          repo_name: ${{ github.repository }}
+          color: 7dbbe6
+      - name: Debug webhook
+        run: echo "${{ secrets.DISCORD_WEBHOOK }}"
