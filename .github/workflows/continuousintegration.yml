@@ -21,9 +21,9 @@ jobs:
   discord:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
       - name: Run Discord Webhook
-        uses: johnnyhuy/actions-discord-git-webhook@main
+        uses: johnnyhuy/actions-discord-git-webhook@v1.0.4
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          repo_name: ${{ github.repository }}
+          color: 7dbbe6
