@@ -27,3 +27,5 @@ jobs:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           repo_name: ${{ github.repository }}
           color: 7dbbe6
+      - name: Debug webhook
+        run: echo "${{ secrets.DISCORD_WEBHOOK }}"
