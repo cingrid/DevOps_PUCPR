@@ -1,46 +1,37 @@
-from fastapi.testclient import TestClient
-from unittest.mock import patch
+from fastapi import FastAPI
+import random
+from pydantic import BaseModel
 
-client = TestClient(app)
+app = FastAPI()
 
+@app.get("/")
+def home():
+    return {"message": "API rodando."}
 
-def test_root():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"message": "API rodando."}
+class Estudante(BaseModel):
+    name: str
+    curso: str
+    ativo: bool
 
-
-def test_helloworld():
-    response = client.get("/helloworld")
-    assert response.status_code == 200
-    assert response.json() == {"message": "hello, world! :)"}
-
-
-def test_funcaoteste():
-    with patch("src.main.random.randint", return_value=12345):
-        response = client.get("/funcaoteste")
-    assert response.status_code == 200
-    assert response.json() == {"teste": True, "num_aleatorio": 12345}
-
-
-def test_create_estudante():
-    payload = {
-        "name": "Fulano",
-        "curso": "Curso XPTO",
-        "ativo": False
+@app.get("/funcaoteste")
+async def funcaoteste():
+    return {
+        "teste": True,
+        "num_aleatorio": random.randint(0, 10000)
     }
-    response = client.post("/estudantes/cadastro", json=payload)
-    assert response.status_code == 200
-    assert response.json() == payload 
 
+@app.get("/helloworld")
+async def helloworld():
+    return {"message": "hello, world! :)"}
 
-def test_update_estudante():
-    response = client.put("/estudantes/update/10")
-    assert response.status_code == 200
-    assert response.json() == {"id_estudante": 10, "status": "atualizado"}
+@app.post("/estudantes/cadastro")
+async def create_estudante(estudante: Estudante):
+    return estudante
 
+@app.put("/estudantes/update/{id_estudante}")
+async def update_estudante(id_estudante: int):
+    return {"id_estudante": id_estudante, "status": "atualizado"}
 
-def test_delete_estudante():
-    response = client.delete("/estudantes/delete/10") 
-    assert response.status_code == 200
-    assert response.json() == {"deleted": True}
+@app.delete("/estudantes/delete/{id_estudante}")
+async def delete_estudante(id_estudante: int):
+    return {"deleted": id_estudante > 0}
